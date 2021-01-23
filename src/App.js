@@ -28,6 +28,10 @@ const Turn = styled.ul`
   width:40%;
 `;
 
+const TurnItem = styled.div`
+
+`;
+
 const Status = styled.p`
   padding:1rem 0;
   text-align:center;
@@ -54,10 +58,10 @@ const statusString = {
   draw:          'draw'
 }
 
-const characters = {
+const characters = Object({
   circle: '○',
   cross: '×'
-}
+});
 
 const lines = [
   [0, 1, 2],
@@ -73,6 +77,7 @@ const lines = [
 const initialState = {
   cells:       new Array(9),
   nextTurn:    true,
+  progress:    true,
   battleCount: 0,
   statusText:  statusString.processing,
   turn:        characters.circle,
@@ -86,34 +91,55 @@ export default class App extends React.Component {
     this.state = {...initialState};
   }
 
-  // イベント処理
-  handleOnClick = (index) => {
-    const { cells,turn } = this.state;
-    
+  // イベント処理(cellのクリック)
+  tableClick = (index) => {
+    const {cells,turn,nextTurn,progress} = this.state;
     const newcells = [...cells];
     newcells[index] = turn;
-    console.log(newcells[index])
-    // 状態管理
+
+    // 空だった時のみ○×記入可(memo:状態管理の前にかく)
+    if(cells[index]){
+      return;
+    }
+
     this.setState({
       cells: newcells,
+      nextTurn: !nextTurn,
+      turn: nextTurn ? characters.cross  :characters.circle 
     });
   };
 
+  // イベント処理(Restartボタン)
+  restartClick = () => {
+    const {statusText} = this.state;
+    this.setState({
+      cells: [],
+      statusText: statusString.processing
+    }); 
+  };
+
+
   render() {
     const {cells, statusText} = this.state;
+   
+    const charc = Object.values(characters).map((character) => {
+      {character}
+    });
     return (
       <Container>
         <Main>
           <Header>
             <Title>Tic Tac Toe</Title>
             <Turn>
-              <li>{characters.circle}</li>
-              <li>{characters.cross}</li>
+             {Object.values(characters).map(character => {
+               <TurnItem>{character}</TurnItem>
+            })}
+             
             </Turn>
           </Header>
-          <Table cells={cells} handleOnClick={this.handleOnClick} />
+          <Table cells={cells} onClick={this.tableClick} />
           <Status>{statusText}</Status>
-          <Button>Restart</Button>
+          <Button onClick={this.restartClick} >Restart</Button>
         </Main>
       </Container>
     );

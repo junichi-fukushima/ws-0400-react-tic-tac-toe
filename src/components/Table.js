@@ -25,24 +25,24 @@ const Cell = styled.div`
   }
 `;
 
-const RowWrap = ({cells,rowIndex,handleOnClick}) => {
+const RowWrap = ({cells,rowIndex,onClick}) => {
   return (
     <Row>
       {new Array(3).fill('').map((_, colIndex) => {
         const cellIndex = 3 * (rowIndex - 1) + colIndex;
-        const cellClick = () => handleOnClick(cellIndex)
-        return <Cell key={cellIndex} handleOnClick={cellClick}>{cells[cellIndex]}</Cell>;
+        const cellClick = () => onClick(cellIndex)
+        return <Cell key={cellIndex} onClick={cellClick}>{cells[cellIndex]}</Cell>;
       })}
     </Row>
   );
 }
 
-export const Table = ({cells, handleOnClick}) => {
+export const Table = ({cells, onClick}) => {
   return (
     <Container>
-      <RowWrap  cells={cells} rowIndex={1} handleOnClick={handleOnClick} />
-      <RowWrap  cells={cells} rowIndex={2} handleOnClick={handleOnClick} />
-      <RowWrap  cells={cells} rowIndex={3} handleOnClick={handleOnClick} />
+      <RowWrap  cells={cells} rowIndex={1} onClick={onClick} />
+      <RowWrap  cells={cells} rowIndex={2} onClick={onClick} />
+      <RowWrap  cells={cells} rowIndex={3} onClick={onClick} />
     </Container>
   );
 }
