@@ -29,7 +29,7 @@ const Turn = styled.ul`
 `;
 
 const TurnItem = styled.div`
-
+  border-bottom: ${({turn,key}) => (turn === key ? '3px solid black' : '0')};
 `;
 
 const Status = styled.p`
@@ -105,8 +105,9 @@ export default class App extends React.Component {
     this.setState({
       cells: newcells,
       nextTurn: !nextTurn,
-      turn: nextTurn ? characters.cross  :characters.circle 
+      turn: nextTurn ? characters.cross :characters.circle 
     });
+    
   };
 
   // イベント処理(Restartボタン)
@@ -120,11 +121,9 @@ export default class App extends React.Component {
 
 
   render() {
-    const {cells, statusText} = this.state;
+    const {turn,cells,statusText} = this.state;
    
-    const charc = Object.values(characters).map((character) => {
-      {character}
-    });
+    
     return (
       <Container>
         <Main>
@@ -132,9 +131,10 @@ export default class App extends React.Component {
             <Title>Tic Tac Toe</Title>
             <Turn>
              {Object.values(characters).map(character => {
-               <TurnItem>{character}</TurnItem>
+               return (
+               <TurnItem key={character} turn={turn}>{character}</TurnItem>
+               );
             })}
-             
             </Turn>
           </Header>
           <Table cells={cells} onClick={this.tableClick} />
