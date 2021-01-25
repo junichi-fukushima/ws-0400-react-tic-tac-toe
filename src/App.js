@@ -22,14 +22,17 @@ const Title = styled.h1`
 
 const Turn = styled.ul`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   list-style:none;
-  width:40%;
+  width:80%;
+  padding: 0.5rem 0;
+  margin: 0 auto;
 `;
 
 const TurnItem = styled.div`
-  border-bottom: ${({turn,key}) => (turn === key ? '3px solid black' : '0')};
+  border-bottom: ${({selected}) => (selected ? '3px solid black' : '0')};
+  text-align:center;
+  width:50%;
 `;
 
 const Status = styled.p`
@@ -50,6 +53,7 @@ const Button = styled.div`
     color: white;
   }  
 `;
+
 // 状態
 const statusString = {
   processing:    'processing...',
@@ -98,7 +102,7 @@ export default class App extends React.Component {
     newcells[index] = turn;
 
     // 空だった時のみ○×記入可(memo:状態管理の前にかく)
-    if(cells[index]){
+    if(cells[index] || progress == false){
       return;
     }
 
@@ -107,15 +111,16 @@ export default class App extends React.Component {
       nextTurn: !nextTurn,
       turn: nextTurn ? characters.cross :characters.circle 
     });
-    
+   
   };
 
   // イベント処理(Restartボタン)
   restartClick = () => {
-    const {statusText} = this.state;
+    const {cells,statusText} = this.state;
     this.setState({
       cells: [],
-      statusText: statusString.processing
+      statusText: statusString.processing,
+      nextTurn: true
     }); 
   };
 
@@ -123,16 +128,16 @@ export default class App extends React.Component {
   render() {
     const {turn,cells,statusText} = this.state;
    
-    
     return (
       <Container>
         <Main>
           <Header>
             <Title>Tic Tac Toe</Title>
             <Turn>
-             {Object.values(characters).map(character => {
+             {Object.values(characters).map(character => {  
+               const selected = character === turn       
                return (
-               <TurnItem key={character} turn={turn}>{character}</TurnItem>
+               <TurnItem key={character} selected={selected} >{character}</TurnItem>
                );
             })}
             </Turn>
