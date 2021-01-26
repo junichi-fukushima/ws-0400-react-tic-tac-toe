@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 // styled-componentの実装
 const Container = styled.div`
@@ -28,7 +28,7 @@ const Cell = styled.div`
 const RowWrap = ({ cells, rowIndex, onClick }) => {
   return (
     <Row>
-      {new Array(3).fill("").map((_, colIndex) => {
+      {new Array(3).fill('').map((_, colIndex) => {
         const cellIndex = 3 * (rowIndex - 1) + colIndex;
         const cellClick = () => onClick(cellIndex);
         return (

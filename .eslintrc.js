@@ -3,19 +3,20 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ["plugin:react/recommended", "standard"],
+  extends: 'eslint:recommended',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
     ecmaVersion: 12,
-    sourceType: "module",
+    sourceType: 'module',
   },
-  plugins: ["react"],
+  plugins: ['prettier', 'react'],
   rules: {
-    semi: ["error", "always"],
-    quotes: ["error", "single"],
+    semi: ['error', 'always'],
+    quotes: ['error', 'single'],
     // インデント幅が2でなければLinterエラー。
-    indent: ["error", 2],
+    indent: ['error', 2],
+    'no-unused-vars': 'off',
   },
 };
