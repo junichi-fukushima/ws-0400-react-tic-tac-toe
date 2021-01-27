@@ -86,11 +86,11 @@ const initialState = {
   winner: null,
 };
 
-const judgeWinner = (cells) => {
+const judgeWinner = (cells, turn, index) => {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
-      return cells[a];
+      return (turn, index);
     }
   }
   return null;
@@ -123,6 +123,7 @@ export default class App extends React.Component {
 
     // どっちかが勝利の場合
     if (judgeWinner(cells, turn, index)) {
+      console.log(turn);
       this.setState({
         progress: false,
         winner: turn,
@@ -134,6 +135,7 @@ export default class App extends React.Component {
       return;
     }
 
+    
     // 引き分け
     if (newBattleCount === 9) {
       this.setState({
