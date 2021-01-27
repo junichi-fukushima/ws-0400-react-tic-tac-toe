@@ -83,7 +83,7 @@ const initialState = {
   battleCount: 0,
   statusText: statusString.processing,
   turn: characters.circle,
-  winner: null
+  winner: null,
 };
 
 const judgeWinner = (cells) => {
@@ -96,9 +96,7 @@ const judgeWinner = (cells) => {
   return null;
 };
 
-
 export default class App extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = { ...initialState };
@@ -120,15 +118,18 @@ export default class App extends React.Component {
     this.setState({
       cells: newcells,
       turn: turn === characters.circle ? characters.cross : characters.circle,
-      battleCount: newBattleCount
+      battleCount: newBattleCount,
     });
-   
+
     // どっちかが勝利の場合
-    if (judgeWinner(cells,turn,index)) {
+    if (judgeWinner(cells, turn, index)) {
       this.setState({
         progress: false,
         winner: turn,
-        statusText: winner === characters.circle ?  statusString.circle : statusString.cross
+        statusText:
+          winner === characters.circle
+            ? statusString.circle
+            : statusString.cross,
       });
       return;
     }
