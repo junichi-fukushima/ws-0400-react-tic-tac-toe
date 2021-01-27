@@ -83,47 +83,66 @@ const initialState = {
   battleCount: 0,
   statusText: statusString.processing,
   turn: characters.circle,
+  winner: null
 };
 
-// ビュー表示部分を実装
+const judgeWinner = (cells) => {
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+      return cells[a];
+    }
+  }
+  return null;
+};
+
+
 export default class App extends React.Component {
-  // 初期化
+
   constructor(props) {
     super(props);
     this.state = { ...initialState };
   }
 
-  // イベント処理(cellのクリック)
   tableClick = (index) => {
-    const { cells, turn, progress } = this.state;
+    const { cells, turn, progress, battleCount, winner } = this.state;
 
-    // 空だった時のみ○×記入可(memo:状態管理の前にかく)
-    if (cells[index] || progress === false) {
+    if (cells[index] || !progress) {
       return;
     }
 
-    // newcellsを生成する
     const newcells = [...cells];
     newcells[index] = turn;
+
+    let newBattleCount = battleCount;
+    newBattleCount++;
 
     this.setState({
       cells: newcells,
       turn: turn === characters.circle ? characters.cross : characters.circle,
+      battleCount: newBattleCount
     });
-  };
-
-  judgeWinner = () => {
-    const { cells } = this.state;
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
-        return cells[a];
-      }
+   
+    // どっちかが勝利の場合
+    if (judgeWinner(cells,turn,index)) {
+      this.setState({
+        progress: false,
+        winner: turn,
+        statusText: winner === characters.circle ?  statusString.circle : statusString.cross
+      });
+      return;
     }
-    return null;
+
+    // 引き分け
+    if (newBattleCount === 9) {
+      this.setState({
+        progress: false,
+        statusText: statusString.draw,
+      });
+      return;
+    }
   };
 
-  // イベント処理(Restartボタン)
   restartClick = () => {
     this.setState({ ...initialState });
   };
