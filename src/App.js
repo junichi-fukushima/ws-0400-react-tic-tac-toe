@@ -103,12 +103,12 @@ export default class App extends React.Component {
   }
 
   tableClick = (index) => {
-    const { cells, turn, progress, battleCount, winner } = this.state;
+    const { cells, turn, progress, battleCount, winner, statusText } = this.state;
 
-    if (cells[index] || !progress) {
+    if (cells[index] || progress === false) {
       return;
     }
-
+    
     const newcells = [...cells];
     newcells[index] = turn;
 
@@ -122,19 +122,21 @@ export default class App extends React.Component {
     });
 
     // どっちかが勝利の場合
-    if (judgeWinner(cells, turn, index)) {
-      console.log(turn);
+    if (judgeWinner(newcells, turn, index)) {
       this.setState({
         progress: false,
-        winner: turn,
         statusText:
-          winner === characters.circle
+          turn === characters.circle
             ? statusString.circle
             : statusString.cross,
       });
+      console.log(statusText);
+      console.log(progress);
+      console.log(turn);
+      console.log(index);
       return;
     }
-
+    
     
     // 引き分け
     if (newBattleCount === 9) {
