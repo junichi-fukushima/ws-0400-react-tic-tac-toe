@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Table } from './components/Table';
+import { HeaderWrap } from './components/Header';
 
 // styled-componentの実装
 const Container = styled.div`
@@ -10,29 +11,6 @@ const Container = styled.div`
   height: 100vh;
 `;
 const Main = styled.div``;
-const Header = styled.div`
-  padding: 16px;
-`;
-
-const Title = styled.h1`
-  text-align: center;
-  font-size: 1.5rem;
-`;
-
-const Turn = styled.ul`
-  display: flex;
-  justify-content: center;
-  list-style: none;
-  width: 80%;
-  padding: 0.5rem 0;
-  margin: 0 auto;
-`;
-
-const TurnItem = styled.div`
-  border-bottom: ${({ selected }) => (selected ? '3px solid black' : '0')};
-  text-align: center;
-  width: 50%;
-`;
 
 const Status = styled.p`
   padding: 1rem 0;
@@ -90,7 +68,7 @@ const judgeWinner = (cells, turn, index) => {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
-      return (turn, index);
+      return turn, index;
     }
   }
   return null;
@@ -103,12 +81,19 @@ export default class App extends React.Component {
   }
 
   tableClick = (index) => {
-    const { cells, turn, progress, battleCount, winner, statusText } = this.state;
+    const {
+      cells,
+      turn,
+      progress,
+      battleCount,
+      winner,
+      statusText,
+    } = this.state;
 
     if (cells[index] || progress === false) {
       return;
     }
-    
+
     const newcells = [...cells];
     newcells[index] = turn;
 
@@ -121,24 +106,17 @@ export default class App extends React.Component {
       battleCount: newBattleCount,
     });
 
-    // どっちかが勝利の場合
     if (judgeWinner(newcells, turn, index)) {
       this.setState({
         progress: false,
         statusText:
           turn === characters.circle
-            ? statusString.circle
-            : statusString.cross,
+            ? statusString.circleWin
+            : statusString.crossWin,
       });
-      console.log(statusText);
-      console.log(progress);
-      console.log(turn);
-      console.log(index);
       return;
     }
-    
-    
-    // 引き分け
+
     if (newBattleCount === 9) {
       this.setState({
         progress: false,
@@ -158,19 +136,7 @@ export default class App extends React.Component {
     return (
       <Container>
         <Main>
-          <Header>
-            <Title>Tic Tac Toe</Title>
-            <Turn>
-              {Object.values(characters).map((character) => {
-                const selected = character === turn;
-                return (
-                  <TurnItem key={character} selected={selected}>
-                    {character}
-                  </TurnItem>
-                );
-              })}
-            </Turn>
-          </Header>
+          <HeaderWrap turn={turn} characters={Object.values(characters)} />
           <Table cells={cells} onClick={this.tableClick} />
           <Status>{statusText}</Status>
           <Button onClick={this.restartClick}>Restart</Button>
